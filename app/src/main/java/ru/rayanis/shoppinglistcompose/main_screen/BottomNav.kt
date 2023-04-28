@@ -6,11 +6,13 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.rayanis.shoppinglistcompose.ui.theme.BlueLight
 import ru.rayanis.shoppinglistcompose.ui.theme.GreyLight
 
@@ -26,8 +28,10 @@ fun BottomNav(
     )
     BottomNavigation(backgroundColor = Color.White) {
         listItems.forEach { bottomNavItem ->
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
             BottomNavigationItem(
-                selected = false,
+                selected = currentRoute == bottomNavItem.route,
                 onClick = {
                           navController.navigate(bottomNavItem.route)
                 },
