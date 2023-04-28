@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,4 +18,10 @@ interface AddItemDao {
 
     @Query("SELECT * FROM add_item WHERE listId = :listId")
     fun getAllItemsById(listId: Int): Flow<List<AddItem>>
+
+    @Query("SELECT * FROM shop_list_name WHERE id = :listId")
+    fun getListItemById(listId: Int): ShoppingListItem
+
+    @Update
+    suspend fun insertItem(item: ShoppingListItem)
 }
