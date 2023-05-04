@@ -1,18 +1,16 @@
 package ru.rayanis.shoppinglistcompose.shopping_list_screen
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.rayanis.shoppinglistcompose.data.ShoppingListItem
 import ru.rayanis.shoppinglistcompose.data.ShoppingListRepository
 import ru.rayanis.shoppinglistcompose.dialog.DialogEvent
-import ru.rayanis.shoppinglistcompose.utils.DialogController
+import ru.rayanis.shoppinglistcompose.dialog.DialogController
 import ru.rayanis.shoppinglistcompose.utils.UiEvent
 import javax.inject.Inject
 
@@ -28,13 +26,13 @@ class ShoppingListViewModel @Inject constructor(
 
     private var listItem: ShoppingListItem? = null
 
-    override var dialogTitle = mutableStateOf("")
+    override var dialogTitle = mutableStateOf("Delete this item?")
         private set
     override var editableText = mutableStateOf("")
         private set
-    override var openDialog = mutableStateOf(false)
+    override var openDialog = mutableStateOf(true)
         private set
-    override var showEditableText = mutableStateOf(false)
+    override var showEditableText = mutableStateOf(true)
         private set
 
     fun onEvent(event: ShoppingListEvent) {
@@ -73,11 +71,13 @@ class ShoppingListViewModel @Inject constructor(
             }
         }
     }
-    fun onDialogEvent(event: DialogEvent) {
-        when(event) {
+
+    override fun onDialogEvent(event: DialogEvent) {
+        when (event) {
             is DialogEvent.OnCancel -> {
                 openDialog.value = false
             }
+
             is DialogEvent.OnConfirm -> {
                 if (showEditableText.value) {
                     onEvent(ShoppingListEvent.OnItemSave)
@@ -88,6 +88,7 @@ class ShoppingListViewModel @Inject constructor(
                 }
                 openDialog.value = false
             }
+
             is DialogEvent.OnTextChange -> {
                 editableText.value = event.text
             }

@@ -133,11 +133,11 @@ fun UiShoppingListItem() {
                 modifier = Modifier
                     .background(Red)
                     .padding(
-                    top = 3.dp,
-                    bottom = 3.dp,
-                    start = 5.dp,
-                    end = 5.dp
-                ),
+                        top = 3.dp,
+                        bottom = 3.dp,
+                        start = 5.dp,
+                        end = 5.dp
+                    ),
                 color = Color.White
             )
         }

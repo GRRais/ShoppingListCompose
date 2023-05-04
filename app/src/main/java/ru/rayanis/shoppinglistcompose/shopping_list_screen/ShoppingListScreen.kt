@@ -6,13 +6,19 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import ru.rayanis.shoppinglistcompose.dialog.MainDialog
 
 @Composable
-fun ShoppingListScreen() {
+fun ShoppingListScreen(
+    viewModel: ShoppingListViewModel = hiltViewModel()
+) {
     Text(
         text = "Shopping list screen",
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .wrapContentHeight()
             .wrapContentWidth()
     )
+    MainDialog(viewModel)
 }

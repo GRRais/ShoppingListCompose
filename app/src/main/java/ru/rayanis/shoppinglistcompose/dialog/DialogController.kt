@@ -1,4 +1,4 @@
-package ru.rayanis.shoppinglistcompose.utils
+package ru.rayanis.shoppinglistcompose.dialog
 
 import androidx.compose.runtime.MutableState
 
@@ -7,4 +7,5 @@ interface DialogController {
     val editableText: MutableState<String>
     val openDialog: MutableState<Boolean>
     val showEditableText: MutableState<Boolean>
+    fun onDialogEvent(event: DialogEvent)
 }
