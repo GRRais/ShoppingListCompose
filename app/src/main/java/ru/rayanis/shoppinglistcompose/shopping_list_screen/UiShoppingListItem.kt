@@ -24,14 +24,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import ru.rayanis.shoppinglistcompose.R
+import ru.rayanis.shoppinglistcompose.data.ShoppingListItem
 import ru.rayanis.shoppinglistcompose.ui.theme.DarkText
 import ru.rayanis.shoppinglistcompose.ui.theme.GreenLight
 import ru.rayanis.shoppinglistcompose.ui.theme.LightText
 import ru.rayanis.shoppinglistcompose.ui.theme.Red
 
-@Preview(showBackground = true)
 @Composable
-fun UiShoppingListItem() {
+fun UiShoppingListItem(
+    item: ShoppingListItem
+) {
     ConstraintLayout(
         modifier = Modifier.padding(
             start = 3.dp, top = 18.dp, end = 3.dp
@@ -53,7 +55,7 @@ fun UiShoppingListItem() {
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "List 1",
+                    text = item.name,
                     style = TextStyle(
                         color = DarkText,
                         fontWeight = FontWeight.Bold,
@@ -61,7 +63,7 @@ fun UiShoppingListItem() {
                     )
                 )
                 Text(
-                    text = "12/12/2023",
+                    text = item.time,
                     style = TextStyle(
                         color = LightText,
                         fontSize = 12.sp
@@ -70,7 +72,8 @@ fun UiShoppingListItem() {
                 LinearProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 5.dp)
+                        .padding(top = 5.dp),
+                    progress = 0.5f
                 )
             }
         }
@@ -129,7 +132,7 @@ fun UiShoppingListItem() {
                 .padding(end = 5.dp)
         ) {
             Text(
-                text = "15/5",
+                text = "${item.allItemsCount}/${item.allSelectedItemsCount}",
                 modifier = Modifier
                     .background(Red)
                     .padding(

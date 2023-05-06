@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.rayanis.shoppinglistcompose.ui.theme.DarkText
-import ru.rayanis.shoppinglistcompose.ui.theme.GreyLight
+import ru.rayanis.shoppinglistcompose.ui.theme.GrayLight
 
 @Composable
 fun MainDialog(
@@ -51,7 +51,7 @@ fun MainDialog(
                                 Text(text = "List name:")
                             },
                             colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = GreyLight,
+                                backgroundColor = GrayLight,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent
                             ),

@@ -1,20 +1,17 @@
 package ru.rayanis.shoppinglistcompose.main_screen
 
-import androidx.compose.foundation.background
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.rayanis.shoppinglistcompose.ui.theme.BlueLight
-import ru.rayanis.shoppinglistcompose.ui.theme.GreyLight
+import ru.rayanis.shoppinglistcompose.ui.theme.GrayLight
 
 @Composable
 fun BottomNav(
@@ -45,7 +42,7 @@ fun BottomNav(
                     Text(text = bottomNavItem.title)
                 },
                 selectedContentColor = BlueLight,
-                unselectedContentColor = GreyLight,
+                unselectedContentColor = GrayLight,
                 alwaysShowLabel = false
             )
         }
