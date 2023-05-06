@@ -11,11 +11,15 @@ import ru.rayanis.shoppinglistcompose.shopping_list_screen.ShoppingListScreen
 import ru.rayanis.shoppinglistcompose.utils.Routes
 
 @Composable
-fun NavigationGraph(navController: NavHostController) {
-
+fun NavigationGraph(
+    navController: NavHostController,
+    onNavigate: (String) -> Unit
+) {
     NavHost(navController = navController, startDestination = Routes.SHOPPING_LIST) {
         composable(Routes.SHOPPING_LIST) {
-            ShoppingListScreen()
+            ShoppingListScreen() { route ->
+                onNavigate(route)
+            }
         }
         composable(Routes.NOTE_LIST) {
             NoteListScreen()

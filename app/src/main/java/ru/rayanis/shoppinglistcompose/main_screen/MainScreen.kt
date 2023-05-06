@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ru.rayanis.shoppinglistcompose.R
 import ru.rayanis.shoppinglistcompose.dialog.MainDialog
@@ -18,6 +19,7 @@ import ru.rayanis.shoppinglistcompose.shopping_list_screen.ShoppingListViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
+    mainNavHostController: NavHostController,
     viewModel: MainScreenViewModel = hiltViewModel()
 ) {
 
@@ -42,7 +44,9 @@ fun MainScreen(
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true
     ) {
-        NavigationGraph(navController)
+        NavigationGraph(navController) { route ->
+            mainNavHostController.navigate(route)
+        }
         MainDialog(viewModel)
     }
 }

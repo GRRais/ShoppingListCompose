@@ -9,18 +9,34 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.collect
 import ru.rayanis.shoppinglistcompose.dialog.MainDialog
 import ru.rayanis.shoppinglistcompose.ui.theme.GrayLight
+import ru.rayanis.shoppinglistcompose.utils.UiEvent
 
 @Composable
 fun ShoppingListScreen(
-    viewModel: ShoppingListViewModel = hiltViewModel()
+    viewModel: ShoppingListViewModel = hiltViewModel(),
+    onNavigate: (String) -> Unit
 ) {
     val itemsList = viewModel.list.collectAsState(initial = emptyList())
+
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { uiEvent ->
+            when (uiEvent) {
+                is UiEvent.Navigate -> {
+                    onNavigate(uiEvent.route)
+                }
+
+                else -> {}
+            }
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -29,7 +45,10 @@ fun ShoppingListScreen(
         contentPadding = PaddingValues(bottom = 100.dp)
     ) {
         items(itemsList.value) { item ->
-            UiShoppingListItem(item)
+            UiShoppingListItem(item) { event ->
+                viewModel.onEvent(event)
+            }
         }
     }
+    MainDialog(viewModel)
 }
