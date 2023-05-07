@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.rayanis.shoppinglistcompose.data.AddItem
 import ru.rayanis.shoppinglistcompose.data.AddItemRepository
+import ru.rayanis.shoppinglistcompose.data.ShoppingListItem
 import ru.rayanis.shoppinglistcompose.dialog.DialogController
 import ru.rayanis.shoppinglistcompose.dialog.DialogEvent
 import javax.inject.Inject
@@ -21,14 +23,16 @@ class AddItemViewModel @Inject constructor(
 ) : ViewModel(), DialogController {
 
     var itemsList: Flow<List<AddItem>>? = null
-
+    var shoppingListItem: ShoppingListItem? = null
     var addItem: AddItem? = null
     var listId: Int = -1
 
     init {
         listId = savedStateHandle.get<String>("listId")?.toInt()!!
-        itemsList = listId?.let { repository.getAllItemsById(it) }
-        Log.d("MyLog", "List id View model: $listId")
+        itemsList = repository.getAllItemsById(listId)
+        viewModelScope.launch {
+            shoppingListItem = repository.getListItemById(listId)
+        }
     }
 
     var itemText = mutableStateOf("")
@@ -59,6 +63,7 @@ class AddItemViewModel @Inject constructor(
                     itemText.value = ""
                     addItem = null
                 }
+                updateShoppingListCount()
             }
 
             is AddItemEvent.OnShowEditDialog -> {
@@ -75,12 +80,14 @@ class AddItemViewModel @Inject constructor(
                 viewModelScope.launch {
                     repository.deleteItem(event.item)
                 }
+                updateShoppingListCount()
             }
 
             is AddItemEvent.OnCheckedChange -> {
                 viewModelScope.launch {
                     repository.insertItem(event.item)
                 }
+                updateShoppingListCount()
             }
         }
     }
@@ -100,6 +107,25 @@ class AddItemViewModel @Inject constructor(
 
             is DialogEvent.OnTextChange -> {
                 editableText.value = event.text
+            }
+        }
+    }
+
+    private fun updateShoppingListCount() {
+        viewModelScope.launch {
+            itemsList?.collect { list ->
+                var counter = 0
+                list.forEach { item ->
+                    if (item.isCheck) counter++
+                }
+                shoppingListItem?.let { shItem ->
+                    repository.insertItem(
+                        shItem.copy(
+                            allItemsCount = list.size,
+                            allSelectedItemsCount = counter
+                        )
+                    )
+                }
             }
         }
     }
