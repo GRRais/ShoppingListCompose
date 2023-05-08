@@ -64,8 +64,10 @@ fun AddItemScreen(
                 ) {
                     TextField(
                         modifier = Modifier.weight(1f),
-                        value = "",
-                        onValueChange = {},
+                        value = viewModel.itemText.value,
+                        onValueChange = { text ->
+                            viewModel.onEvent(AddItemEvent.OnTextChange(text))
+                        },
                         label = {
                             Text(
                                 text = "New item:",
@@ -101,7 +103,7 @@ fun AddItemScreen(
                     .padding(top = 10.dp)
             ) {
                 if (itemsList != null) {
-                    items(itemsList.value) {item ->
+                    items(itemsList.value) { item ->
                         UiAddItem(item = item, onEvent = {
 
                         })
