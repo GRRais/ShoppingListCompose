@@ -21,7 +21,7 @@ class AddItemRepoImpl(
         return dao.getAllItemsById(listId)
     }
 
-    override fun getListItemById(listId: Int): ShoppingListItem {
+    override suspend fun getListItemById(listId: Int): ShoppingListItem {
         return dao.getListItemById(listId)
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.collect
 import ru.rayanis.shoppinglistcompose.dialog.MainDialog
+import ru.rayanis.shoppinglistcompose.ui.theme.EmptyText
 import ru.rayanis.shoppinglistcompose.ui.theme.GrayLight
 import ru.rayanis.shoppinglistcompose.utils.UiEvent
 
@@ -34,6 +35,7 @@ fun ShoppingListScreen(
                 is UiEvent.Navigate -> {
                     onNavigate(uiEvent.route)
                 }
+
                 else -> {}
             }
         }
@@ -59,7 +61,8 @@ fun ShoppingListScreen(
                 .wrapContentHeight(),
             text = "Empty",
             fontSize = 25.sp,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = EmptyText
         )
     }
 }

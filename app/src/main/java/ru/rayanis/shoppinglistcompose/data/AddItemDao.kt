@@ -20,7 +20,7 @@ interface AddItemDao {
     fun getAllItemsById(listId: Int): Flow<List<AddItem>>
 
     @Query("SELECT * FROM shop_list_name WHERE id = :listId")
-    fun getListItemById(listId: Int): ShoppingListItem
+    suspend fun getListItemById(listId: Int): ShoppingListItem
 
     @Update
     suspend fun insertItem(item: ShoppingListItem)

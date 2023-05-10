@@ -5,13 +5,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.rayanis.shoppinglistcompose.data.AddItem
 import ru.rayanis.shoppinglistcompose.data.AddItemRepository
 import ru.rayanis.shoppinglistcompose.data.ShoppingListItem
 import ru.rayanis.shoppinglistcompose.dialog.DialogController
 import ru.rayanis.shoppinglistcompose.dialog.DialogEvent
+import ru.rayanis.shoppinglistcompose.utils.UiEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,6 +22,9 @@ class AddItemViewModel @Inject constructor(
     private val repository: AddItemRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(), DialogController {
+
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     var itemsList: Flow<List<AddItem>>? = null
     var shoppingListItem: ShoppingListItem? = null
@@ -49,7 +55,18 @@ class AddItemViewModel @Inject constructor(
         when (event) {
             is AddItemEvent.OnItemSave -> {
                 viewModelScope.launch {
-                    if (listId == -1) return@launch
+                    if(listId == -1) return@launch
+                    if (addItem != null){
+                        if(addItem!!.name.isEmpty()){
+                            sendUiEvent(UiEvent.ShowSnackBar("Name must not be empty!"))
+                            return@launch
+                        }
+                    } else {
+                        if(itemText.value.isEmpty()){
+                            sendUiEvent(UiEvent.ShowSnackBar("Name must not be empty!"))
+                            return@launch
+                        }
+                    }
                     repository.insertItem(
                         AddItem(
                             addItem?.id,
@@ -69,20 +86,17 @@ class AddItemViewModel @Inject constructor(
                 openDialog.value = true
                 editableText.value = addItem?.name ?: ""
             }
-
             is AddItemEvent.OnTextChange -> {
                 itemText.value = event.text
             }
-
             is AddItemEvent.OnDelete -> {
                 viewModelScope.launch {
                     repository.deleteItem(event.item)
                 }
                 updateShoppingListCount()
             }
-
             is AddItemEvent.OnCheckedChange -> {
-                viewModelScope.launch {
+                viewModelScope.launch{
                     repository.insertItem(event.item)
                 }
                 updateShoppingListCount()
@@ -110,12 +124,12 @@ class AddItemViewModel @Inject constructor(
         }
     }
 
-    private fun updateShoppingListCount(){
+    private fun updateShoppingListCount() {
         viewModelScope.launch {
-            itemsList?.collect{ list ->
+            itemsList?.collect { list ->
                 var counter = 0
                 list.forEach { item ->
-                    if(item.isCheck) counter++
+                    if (item.isCheck) counter++
                 }
                 shoppingListItem?.copy(
                     allItemsCount = list.size,
@@ -126,6 +140,12 @@ class AddItemViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun sendUiEvent(event: UiEvent) {
+        viewModelScope.launch {
+            _uiEvent.send(event)
         }
     }
 }
