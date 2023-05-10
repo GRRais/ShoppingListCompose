@@ -32,7 +32,6 @@ fun ShoppingListScreen(
                 is UiEvent.Navigate -> {
                     onNavigate(uiEvent.route)
                 }
-
                 else -> {}
             }
         }

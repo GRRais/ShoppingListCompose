@@ -1,13 +1,11 @@
 package ru.rayanis.shoppinglistcompose.add_item_screen
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.rayanis.shoppinglistcompose.data.AddItem
 import ru.rayanis.shoppinglistcompose.data.AddItemRepository
@@ -55,7 +53,7 @@ class AddItemViewModel @Inject constructor(
                     repository.insertItem(
                         AddItem(
                             addItem?.id,
-                            itemText.value,
+                            addItem?.name ?: itemText.value,
                             addItem?.isCheck ?: false,
                             listId
                         )
@@ -103,6 +101,7 @@ class AddItemViewModel @Inject constructor(
                 openDialog.value = false
                 itemText.value = editableText.value
                 editableText.value = ""
+                onEvent(AddItemEvent.OnItemSave)
             }
 
             is DialogEvent.OnTextChange -> {
@@ -111,19 +110,19 @@ class AddItemViewModel @Inject constructor(
         }
     }
 
-    private fun updateShoppingListCount() {
+    private fun updateShoppingListCount(){
         viewModelScope.launch {
-            itemsList?.collect { list ->
+            itemsList?.collect{ list ->
                 var counter = 0
                 list.forEach { item ->
-                    if (item.isCheck) counter++
+                    if(item.isCheck) counter++
                 }
-                shoppingListItem?.let { shItem ->
+                shoppingListItem?.copy(
+                    allItemsCount = list.size,
+                    allSelectedItemsCount = counter
+                )?.let { shItem ->
                     repository.insertItem(
-                        shItem.copy(
-                            allItemsCount = list.size,
-                            allSelectedItemsCount = counter
-                        )
+                        shItem
                     )
                 }
             }
