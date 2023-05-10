@@ -99,7 +99,7 @@ class AddItemViewModel @Inject constructor(
 
             is DialogEvent.OnConfirm -> {
                 openDialog.value = false
-                itemText.value = editableText.value
+                addItem = addItem?.copy(name = editableText.value)
                 editableText.value = ""
                 onEvent(AddItemEvent.OnItemSave)
             }

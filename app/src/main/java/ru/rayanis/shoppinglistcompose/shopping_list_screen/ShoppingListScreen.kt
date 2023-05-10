@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.collect
 import ru.rayanis.shoppinglistcompose.dialog.MainDialog
@@ -50,4 +52,14 @@ fun ShoppingListScreen(
         }
     }
     MainDialog(viewModel)
+    if (itemsList.value.isEmpty()) {
+        Text(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentHeight(),
+            text = "Empty",
+            fontSize = 25.sp,
+            textAlign = TextAlign.Center
+        )
+    }
 }
