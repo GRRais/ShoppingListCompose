@@ -15,7 +15,8 @@ import ru.rayanis.shoppinglistcompose.ui.theme.GrayLight
 
 @Composable
 fun BottomNav(
-    navController: NavHostController
+    currentroute: String?,
+    onNavigate: (String) -> Unit
 ) {
     val listItems = listOf(
         BottomNavItem.ListItem,
@@ -25,18 +26,19 @@ fun BottomNav(
     )
     BottomNavigation(backgroundColor = Color.White) {
         listItems.forEach { bottomNavItem ->
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
+
             BottomNavigationItem(
-                selected = currentRoute == bottomNavItem.route,
+                selected = currentroute == bottomNavItem.route,
                 onClick = {
-                          navController.navigate(bottomNavItem.route)
+                    onNavigate(bottomNavItem.route)
                 },
                 icon = {
                     Icon(
                         painter = painterResource(
-                            id = bottomNavItem.iconId),
-                        contentDescription = "icon")
+                            id = bottomNavItem.iconId
+                        ),
+                        contentDescription = "icon"
+                    )
                 },
                 label = {
                     Text(text = bottomNavItem.title)

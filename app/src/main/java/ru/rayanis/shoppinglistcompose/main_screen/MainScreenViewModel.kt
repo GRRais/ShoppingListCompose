@@ -4,18 +4,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.rayanis.shoppinglistcompose.data.ShoppingListItem
 import ru.rayanis.shoppinglistcompose.data.ShoppingListRepository
 import ru.rayanis.shoppinglistcompose.dialog.DialogController
 import ru.rayanis.shoppinglistcompose.dialog.DialogEvent
 import ru.rayanis.shoppinglistcompose.shopping_list_screen.ShoppingListEvent
+import ru.rayanis.shoppinglistcompose.utils.UiEvent
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val repository: ShoppingListRepository
 ) : ViewModel(), DialogController {
+
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     override var dialogTitle = mutableStateOf("List name:")
         private set
@@ -65,6 +71,12 @@ class MainScreenViewModel @Inject constructor(
             is DialogEvent.OnTextChange -> {
                 editableText.value = event.text
             }
+        }
+    }
+
+    private fun sendUiEvent(event: UiEvent) {
+        viewModelScope.launch {
+            _uiEvent.send(event)
         }
     }
 }
