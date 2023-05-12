@@ -40,9 +40,7 @@ fun MainScreen(
                 is UiEvent.Navigate -> {
                     navController.navigate(uiEvent.route)
                 }
-                else {
-
-                }
+                else -> {}
             }
         }
     }
@@ -50,11 +48,11 @@ fun MainScreen(
     Scaffold(
         bottomBar = {
             BottomNav(currentRoute) {route ->
-
+                viewModel.onEvent(MainScreenEvent.Navigate(route))
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
+            if (viewModel.showFloatingButton.value) FloatingActionButton(
                 onClick = {
                     viewModel.onEvent(MainScreenEvent.OnShowEditDialog)
                 }) {
@@ -69,7 +67,7 @@ fun MainScreen(
         isFloatingActionButtonDocked = true
     ) {
         NavigationGraph(navController) { route ->
-
+            viewModel.onEvent(MainScreenEvent.NavigateMain(route))
         }
         MainDialog(viewModel)
     }

@@ -12,6 +12,7 @@ import ru.rayanis.shoppinglistcompose.data.ShoppingListRepository
 import ru.rayanis.shoppinglistcompose.dialog.DialogController
 import ru.rayanis.shoppinglistcompose.dialog.DialogEvent
 import ru.rayanis.shoppinglistcompose.shopping_list_screen.ShoppingListEvent
+import ru.rayanis.shoppinglistcompose.utils.Routes
 import ru.rayanis.shoppinglistcompose.utils.UiEvent
 import javax.inject.Inject
 
@@ -32,6 +33,9 @@ class MainScreenViewModel @Inject constructor(
     override var showEditableText = mutableStateOf(true)
         private set
 
+    var showFloatingButton = mutableStateOf(true)
+        private set
+
     fun onEvent(event: MainScreenEvent) {
         when (event) {
             is MainScreenEvent.OnItemSave -> {
@@ -48,9 +52,20 @@ class MainScreenViewModel @Inject constructor(
                     )
                 }
             }
-
             is MainScreenEvent.OnShowEditDialog -> {
                 openDialog.value = true
+            }
+            is MainScreenEvent.Navigate -> {
+                sendUiEvent(UiEvent.Navigate(event.route))
+                showFloatingButton.value = if (event.route == Routes.ABOUT
+                    || event.route == Routes.SETTINGS) {
+                    false
+                } else {
+                    true
+                }
+            }
+            is MainScreenEvent.NavigateMain -> {
+                sendUiEvent(UiEvent.NavigateMain(event.route))
             }
         }
     }
