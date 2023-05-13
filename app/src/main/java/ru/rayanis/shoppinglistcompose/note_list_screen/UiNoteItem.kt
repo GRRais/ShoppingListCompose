@@ -6,14 +6,21 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.rayanis.shoppinglistcompose.ui.theme.BlueLight
+import ru.rayanis.shoppinglistcompose.ui.theme.LightText
+import ru.rayanis.shoppinglistcompose.ui.theme.Red
 
 @Preview(showBackground = true)
 @Composable
@@ -60,14 +67,24 @@ fun UiNoteItem() {
                     modifier = Modifier
                         .padding(
                             top = 5.dp,
-                            start = 10.dp
+                            start = 10.dp,
+                            bottom = 10.dp
                         )
                         .weight(1f),
                     text = "sdsd sdfsdf sdfs ds dgs dgsd gsdgsdg sdgsdg sd gd gd gsdg sdgs" +
                             "dfsdgsd sdgs dgsd gsdg s dg sd g sdg sdgsd gsd gs dg sdg s dg s" +
                             "s dg ds g sd g sd g  ds  gsdgsdgsdg sd g s dg sd ",
-                    maxLines = 2
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    color = LightText
                 )
+                IconButton(onClick = { }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = Red
+                    )
+                }
             }
         }
     }
