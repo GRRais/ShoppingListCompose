@@ -18,6 +18,7 @@ import ru.rayanis.shoppinglistcompose.R
 import ru.rayanis.shoppinglistcompose.dialog.MainDialog
 import ru.rayanis.shoppinglistcompose.navigation.NavigationGraph
 import ru.rayanis.shoppinglistcompose.shopping_list_screen.ShoppingListViewModel
+import ru.rayanis.shoppinglistcompose.utils.Routes
 import ru.rayanis.shoppinglistcompose.utils.UiEvent
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
@@ -54,7 +55,7 @@ fun MainScreen(
         floatingActionButton = {
             if (viewModel.showFloatingButton.value) FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(MainScreenEvent.OnShowEditDialog)
+                    viewModel.onEvent(MainScreenEvent.OnNewItemClick(currentRoute ?: Routes.SHOPPING_LIST))
                 }) {
                 Icon(
                     painter = painterResource(id = R.drawable.add_icon),
