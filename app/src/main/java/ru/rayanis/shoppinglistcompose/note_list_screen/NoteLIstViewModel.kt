@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import ru.rayanis.shoppinglistcompose.data.NoteItem
 import ru.rayanis.shoppinglistcompose.data.NoteRepository
 import ru.rayanis.shoppinglistcompose.dialog.DialogController
 import ru.rayanis.shoppinglistcompose.dialog.DialogEvent
@@ -20,6 +21,7 @@ class NoteLIstViewModel @Inject constructor(
 ): ViewModel(), DialogController {
 
     val noteList = repository.getAllItems()
+    private var noteItem: NoteItem? = null
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -33,6 +35,18 @@ class NoteLIstViewModel @Inject constructor(
     override var showEditableText = mutableStateOf(false)
         private set
 
+    fun onEvent(event: NoteListEvent) {
+        when(event) {
+            is NoteListEvent.OnShowDeleteDialog -> {
+                openDialog.value = true
+                noteItem = event.item
+            }
+            is NoteListEvent.OnItemClick -> {
+                sendUiEvent(UiEvent.Navigate(event.route))
+            }
+        }
+    }
+
     override fun onDialogEvent(event: DialogEvent) {
         when (event) {
             is DialogEvent.OnCancel -> {
@@ -40,12 +54,12 @@ class NoteLIstViewModel @Inject constructor(
             }
 
             is DialogEvent.OnConfirm -> {
-
+                viewModelScope.launch {
+                    repository.deleteItem(noteItem!!)
+                }
+                openDialog.value = false
             }
-
-            is DialogEvent.OnTextChange -> {
-                editableText.value = event.text
-            }
+            else -> {}
         }
     }
 

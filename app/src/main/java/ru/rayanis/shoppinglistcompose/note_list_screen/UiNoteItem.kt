@@ -18,13 +18,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.rayanis.shoppinglistcompose.data.NoteItem
 import ru.rayanis.shoppinglistcompose.ui.theme.BlueLight
 import ru.rayanis.shoppinglistcompose.ui.theme.LightText
 import ru.rayanis.shoppinglistcompose.ui.theme.Red
+import ru.rayanis.shoppinglistcompose.utils.Routes
 
-@Preview(showBackground = true)
 @Composable
-fun UiNoteItem() {
+fun UiNoteItem(
+    item: NoteItem,
+    onEvent: (NoteListEvent) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +38,9 @@ fun UiNoteItem() {
                 end = 3.dp
             )
             .clickable {
-
+                onEvent(NoteListEvent.OnItemClick(
+                    Routes.NEW_NOTE + "/${item.id}"
+                ))
             }
     ) {
         Column(
@@ -48,7 +54,7 @@ fun UiNoteItem() {
                             start = 10.dp
                         )
                         .weight(1f),
-                    text = "Note 1",
+                    text = item.title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -57,7 +63,7 @@ fun UiNoteItem() {
                         top = 10.dp,
                         end = 10.dp
                     ),
-                    text = "12/12/2023 13:00",
+                    text = item.time,
                     color = BlueLight,
                     fontSize = 12.sp
                 )
@@ -71,14 +77,15 @@ fun UiNoteItem() {
                             bottom = 10.dp
                         )
                         .weight(1f),
-                    text = "sdsd sdfsdf sdfs ds dgs dgsd gsdgsdg sdgsdg sd gd gd gsdg sdgs" +
-                            "dfsdgsd sdgs dgsd gsdg s dg sd g sdg sdgsd gsd gs dg sdg s dg s" +
-                            "s dg ds g sd g sd g  ds  gsdgsdgsdg sd g s dg sd ",
+                    text = item.description,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     color = LightText
                 )
-                IconButton(onClick = { }) {
+                IconButton(onClick = {
+                    onEvent(NoteListEvent.OnShowDeleteDialog(item))
+                }
+                ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Delete",
