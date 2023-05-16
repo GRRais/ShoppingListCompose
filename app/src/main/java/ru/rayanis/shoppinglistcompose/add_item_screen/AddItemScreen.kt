@@ -14,6 +14,8 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Snackbar
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -50,18 +52,26 @@ fun AddItemScreen(
     val itemsList = viewModel.itemsList?.collectAsState(initial = emptyList())
 
     LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect {uiEvent ->
-            when(uiEvent) {
+        viewModel.uiEvent.collect { uiEvent ->
+            when (uiEvent) {
                 is UiEvent.ShowSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         uiEvent.message
                     )
                 }
+
                 else -> {}
             }
         }
     }
-    Scaffold(scaffoldState = scaffoldState) {
+    Scaffold(scaffoldState = scaffoldState, snackbarHost = {
+        SnackbarHost(hostState = scaffoldState.snackbarHostState) { data ->
+            Snackbar(
+                snackbarData = data,
+                backgroundColor = BlueLight,
+            )
+        }
+    }) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -131,7 +141,7 @@ fun AddItemScreen(
             }
         }
         MainDialog(viewModel)
-        if(itemsList?.value?.isEmpty() == true){
+        if (itemsList?.value?.isEmpty() == true) {
             Text(
                 modifier = Modifier
                     .fillMaxSize()

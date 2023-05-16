@@ -44,6 +44,11 @@ class NoteLIstViewModel @Inject constructor(
             is NoteListEvent.OnItemClick -> {
                 sendUiEvent(UiEvent.Navigate(event.route))
             }
+            is NoteListEvent.UnDoneDeleteItem -> {
+                viewModelScope.launch {
+                    repository.insertItem(noteItem!!)
+                }
+            }
         }
     }
 
@@ -56,6 +61,7 @@ class NoteLIstViewModel @Inject constructor(
             is DialogEvent.OnConfirm -> {
                 viewModelScope.launch {
                     repository.deleteItem(noteItem!!)
+                    sendUiEvent(UiEvent.ShowSnackBar("Undone delete item?"))
                 }
                 openDialog.value = false
             }
