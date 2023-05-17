@@ -30,6 +30,7 @@ import ru.rayanis.shoppinglistcompose.ui.theme.DarkText
 import ru.rayanis.shoppinglistcompose.ui.theme.GreenLight
 import ru.rayanis.shoppinglistcompose.ui.theme.LightText
 import ru.rayanis.shoppinglistcompose.ui.theme.Red
+import ru.rayanis.shoppinglistcompose.utils.ProgressHelper
 import ru.rayanis.shoppinglistcompose.utils.Routes
 
 @Composable
@@ -83,7 +84,10 @@ fun UiShoppingListItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 5.dp),
-                    progress = 0.5f
+                    progress = ProgressHelper.getProgress(
+                        item.allItemsCount,
+                        item.allSelectedItemsCount
+                    )
                 )
             }
         }

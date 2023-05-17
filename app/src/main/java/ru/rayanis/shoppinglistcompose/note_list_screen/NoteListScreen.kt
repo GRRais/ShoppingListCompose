@@ -67,7 +67,7 @@ fun NoteListScreen(
             Snackbar(
                 snackbarData = data,
                 backgroundColor = BlueLight,
-                modifier = Modifier.fillMaxWidth().padding(100.dp)
+                modifier = Modifier.padding(bottom = 100.dp)
             )
         }
     }) {

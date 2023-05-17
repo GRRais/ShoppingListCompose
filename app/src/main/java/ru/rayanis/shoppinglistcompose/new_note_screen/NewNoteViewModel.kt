@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import ru.rayanis.shoppinglistcompose.data.NoteItem
 import ru.rayanis.shoppinglistcompose.data.NoteRepository
 import ru.rayanis.shoppinglistcompose.utils.UiEvent
+import ru.rayanis.shoppinglistcompose.utils.getCurrentTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,7 +63,7 @@ class NewNoteViewModel @Inject constructor(
                             noteItem?.id,
                             title,
                             description,
-                            "12/12/2023 13:00"
+                            noteItem?.time ?: getCurrentTime()
                         )
                     )
                     sendUiEvent(UiEvent.PopBackStack)

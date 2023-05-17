@@ -14,6 +14,7 @@ import ru.rayanis.shoppinglistcompose.dialog.DialogEvent
 import ru.rayanis.shoppinglistcompose.shopping_list_screen.ShoppingListEvent
 import ru.rayanis.shoppinglistcompose.utils.Routes
 import ru.rayanis.shoppinglistcompose.utils.UiEvent
+import ru.rayanis.shoppinglistcompose.utils.getCurrentTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +46,7 @@ class MainScreenViewModel @Inject constructor(
                         ShoppingListItem(
                             null,
                             editableText.value,
-                            "12-12/2023 13.00",
+                            getCurrentTime(),
                             0,
                             0
                         )
