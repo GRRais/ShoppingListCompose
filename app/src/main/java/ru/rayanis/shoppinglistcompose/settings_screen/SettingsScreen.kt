@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun SettingsScreen() {
     Text(
-        text = "Settings screen",
+        text = "About screen",
         modifier = Modifier.fillMaxSize()
             .wrapContentHeight()
             .wrapContentWidth()
