@@ -34,12 +34,15 @@ fun SettingsScreen(
             fontSize = 12.sp,
             color = Color.Gray
         )
-        LazyRow(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp)
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
         ) {
-            items(list) {item ->
-                UiColorItem(item)
+            items(list) { item ->
+                UiColorItem(item) { event ->
+                    viewModel.onEvent(event)
+                }
             }
         }
     }

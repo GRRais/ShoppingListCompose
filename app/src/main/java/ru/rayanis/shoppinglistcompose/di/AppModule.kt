@@ -13,6 +13,7 @@ import ru.rayanis.shoppinglistcompose.data.NoteRepoImpl
 import ru.rayanis.shoppinglistcompose.data.NoteRepository
 import ru.rayanis.shoppinglistcompose.data.ShoppingListRepoImpl
 import ru.rayanis.shoppinglistcompose.data.ShoppingListRepository
+import ru.rayanis.shoppinglistcompose.datastore.DataStoreManager
 import javax.inject.Singleton
 
 @Module
@@ -44,5 +45,11 @@ object AppModule {
     @Singleton
     fun provideNoteRepo(db: MainDb): NoteRepository {
         return NoteRepoImpl(db.noteDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDataStoreManager(app: Application): DataStoreManager {
+        return DataStoreManager(app)
     }
 }

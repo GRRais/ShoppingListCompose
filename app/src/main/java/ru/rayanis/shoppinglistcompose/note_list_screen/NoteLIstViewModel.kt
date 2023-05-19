@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.rayanis.shoppinglistcompose.data.NoteItem
 import ru.rayanis.shoppinglistcompose.data.NoteRepository
+import ru.rayanis.shoppinglistcompose.datastore.DataStoreManager
 import ru.rayanis.shoppinglistcompose.dialog.DialogController
 import ru.rayanis.shoppinglistcompose.dialog.DialogEvent
 import ru.rayanis.shoppinglistcompose.shopping_list_screen.ShoppingListEvent
@@ -17,14 +18,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteLIstViewModel @Inject constructor(
-    private val repository: NoteRepository
-): ViewModel(), DialogController {
+    private val repository: NoteRepository,
+    dataStoreManager: DataStoreManager
+) : ViewModel(), DialogController {
 
     val noteList = repository.getAllItems()
     private var noteItem: NoteItem? = null
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
+    var titleColor = mutableStateOf("#487242")
 
     override var dialogTitle = mutableStateOf("Delete this note?")
         private set
@@ -35,15 +39,28 @@ class NoteLIstViewModel @Inject constructor(
     override var showEditableText = mutableStateOf(false)
         private set
 
+    init {
+        viewModelScope.launch {
+            dataStoreManager.getStringPreference(
+                DataStoreManager.TITLE_COLOR,
+                "#487242"
+            ).collect { color ->
+                titleColor.value = color
+            }
+        }
+    }
+
     fun onEvent(event: NoteListEvent) {
-        when(event) {
+        when (event) {
             is NoteListEvent.OnShowDeleteDialog -> {
                 openDialog.value = true
                 noteItem = event.item
             }
+
             is NoteListEvent.OnItemClick -> {
                 sendUiEvent(UiEvent.Navigate(event.route))
             }
+
             is NoteListEvent.UnDoneDeleteItem -> {
                 viewModelScope.launch {
                     repository.insertItem(noteItem!!)
@@ -65,6 +82,7 @@ class NoteLIstViewModel @Inject constructor(
                 }
                 openDialog.value = false
             }
+
             else -> {}
         }
     }

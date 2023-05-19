@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.rayanis.shoppinglistcompose.data.NoteItem
 import ru.rayanis.shoppinglistcompose.data.NoteRepository
+import ru.rayanis.shoppinglistcompose.datastore.DataStoreManager
 import ru.rayanis.shoppinglistcompose.utils.UiEvent
 import ru.rayanis.shoppinglistcompose.utils.getCurrentTime
 import javax.inject.Inject
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class NewNoteViewModel @Inject constructor(
     private val repository: NoteRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
     private val _uiEvent = Channel<UiEvent>()
@@ -27,6 +29,8 @@ class NewNoteViewModel @Inject constructor(
 
     private var noteId = -1
     private var noteItem: NoteItem? = null
+
+    var titleColor = mutableStateOf("#487242")
 
     var title by mutableStateOf("")
         private set
@@ -41,6 +45,13 @@ class NewNoteViewModel @Inject constructor(
                     title = noteItem.title
                     description = noteItem.description
                     this@NewNoteViewModel.noteItem = noteItem
+                }
+
+                dataStoreManager.getStringPreference(
+                    DataStoreManager.TITLE_COLOR,
+                    "#487242"
+                ).collect { color ->
+                    titleColor.value = color
                 }
             }
         }

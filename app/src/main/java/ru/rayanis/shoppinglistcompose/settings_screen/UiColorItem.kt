@@ -16,10 +16,12 @@ import ru.rayanis.shoppinglistcompose.R
 
 @Composable
 fun UiColorItem(
-    item: ColorItem
+    item: ColorItem,
+    onEvent: (SettingsEvent) -> Unit
 ) {
     IconButton(
         onClick = {
+            onEvent(SettingsEvent.OnItemSelected(item.color))
         },
         modifier = Modifier
             .padding(start = 10.dp)
