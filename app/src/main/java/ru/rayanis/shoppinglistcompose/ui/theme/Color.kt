@@ -8,6 +8,7 @@ val Pink80 = Color(0xFFEFB8C8)
 
 val Purple40 = Color(0xFF6650a4)
 val GreenLight = Color(0x973ACA41)
+val Yellow = Color(0xFFFF9800)
 val Red = Color(0xA6E91B22)
 val BlueLight = Color(0xFF03A9F4)
 val GrayLight = Color(0xFFE9E9E9)

@@ -1,10 +1,13 @@
 package ru.rayanis.shoppinglistcompose.note_list_screen
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.rayanis.shoppinglistcompose.data.NoteItem
@@ -12,7 +15,6 @@ import ru.rayanis.shoppinglistcompose.data.NoteRepository
 import ru.rayanis.shoppinglistcompose.datastore.DataStoreManager
 import ru.rayanis.shoppinglistcompose.dialog.DialogController
 import ru.rayanis.shoppinglistcompose.dialog.DialogEvent
-import ru.rayanis.shoppinglistcompose.shopping_list_screen.ShoppingListEvent
 import ru.rayanis.shoppinglistcompose.utils.UiEvent
 import javax.inject.Inject
 
@@ -22,13 +24,19 @@ class NoteLIstViewModel @Inject constructor(
     dataStoreManager: DataStoreManager
 ) : ViewModel(), DialogController {
 
-    val noteList = repository.getAllItems()
+    val noteListFlow = repository.getAllItems()
     private var noteItem: NoteItem? = null
+
+    var noteList by mutableStateOf(listOf<NoteItem>())
+    var originNoteList = listOf<NoteItem>()
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     var titleColor = mutableStateOf("#487242")
+
+    var searchText by mutableStateOf("")
+        private set
 
     override var dialogTitle = mutableStateOf("Delete this note?")
         private set
@@ -48,10 +56,24 @@ class NoteLIstViewModel @Inject constructor(
                 titleColor.value = color
             }
         }
+
+        viewModelScope.launch {
+            noteListFlow.collect {list ->
+                noteList = list
+                originNoteList = list
+            }
+        }
     }
 
     fun onEvent(event: NoteListEvent) {
         when (event) {
+            is NoteListEvent.OnTextSearchChange -> {
+                searchText = event.text
+                noteList = originNoteList.filter {note ->
+                    note.title.lowercase().contains(searchText.lowercase())
+                }
+            }
+
             is NoteListEvent.OnShowDeleteDialog -> {
                 openDialog.value = true
                 noteItem = event.item

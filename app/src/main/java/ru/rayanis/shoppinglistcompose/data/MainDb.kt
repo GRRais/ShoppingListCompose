@@ -4,8 +4,12 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [ShoppingListItem::class, AddItem::class, NoteItem::class],
-    version = 1
+    entities = [
+        ShoppingListItem::class,
+        AddItem::class,
+        NoteItem::class],
+    version = 1,
+    exportSchema = true
 )
 abstract class MainDb: RoomDatabase() {
     abstract val shoppingListDao: ShoppingListDao
