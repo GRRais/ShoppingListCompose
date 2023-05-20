@@ -16,7 +16,7 @@ interface ShoppingListDao {
     @Delete
     suspend fun deleteItem(item: ShoppingListItem)
 
-    @Query("DELETE FROM add_item WHERE listID = :listId")
+    @Query("DELETE FROM add_item_test WHERE listID = :listId")
     suspend fun deleteAddItems(listId: Int)
 
     @Query("SELECT * FROM shop_list_name")

@@ -45,7 +45,7 @@ class ShoppingListViewModel @Inject constructor(
                         ShoppingListItem(
                             listItem?.id,
                             editableText.value,
-                            listItem?.time ?: getCurrentTime(),
+                            listItem?.my_time ?: getCurrentTime(),
                             listItem?.allItemsCount ?: 0,
                             listItem?.allSelectedItemsCount ?: 0
                         )

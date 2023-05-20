@@ -3,8 +3,8 @@ package ru.rayanis.shoppinglistcompose.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "add_item_test")
-data class AddItem(
+@Entity(tableName = "test_item")
+data class TestItem(
     @PrimaryKey
     val id: Int? = null,
     val name: String,

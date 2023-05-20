@@ -16,7 +16,7 @@ interface AddItemDao {
     @Delete
     suspend fun deleteItem(item: AddItem)
 
-    @Query("SELECT * FROM add_item WHERE listId = :listId")
+    @Query("SELECT * FROM add_item_test WHERE listId = :listId")
     fun getAllItemsById(listId: Int): Flow<List<AddItem>>
 
     @Query("SELECT * FROM shop_list_name WHERE id = :listId")
